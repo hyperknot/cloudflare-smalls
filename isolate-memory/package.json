@@ -2,7 +2,7 @@
   "private": true,
   "scripts": {
     "deploy": "wrangler deploy",
-    "dev": "wrangler dev",
+    "dev": "wrangler dev"
   },
   "devDependencies": {
     "@cloudflare/vitest-pool-workers": "^0.5.2",
