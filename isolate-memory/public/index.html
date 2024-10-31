@@ -1,71 +1,70 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
+  <head>
     <style>
-        body {
-            margin: 0;
-            padding: 20px;
-            font-family: sans-serif;
-        }
-        #grid {
-            display: grid;
-            grid-template-columns: repeat(var(--grid-size), var(--pixel-width));
-            width: var(--grid-width);
-            height: var(--grid-width);
-            gap: 0;
-        }
-        #grid > div {
-            width: var(--pixel-width);
-            height: var(--pixel-width);
-        }
+      body {
+        margin: 0;
+        padding: 20px;
+        font-family: sans-serif;
+      }
+      #grid {
+        display: grid;
+        grid-template-columns: repeat(var(--grid-size), var(--pixel-width));
+        width: var(--grid-width);
+        height: var(--grid-width);
+        gap: 0;
+      }
+      #grid > div {
+        width: var(--pixel-width);
+        height: var(--pixel-width);
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div id="grid"></div>
 
     <script>
-        const GRID_SIZE = 10;
-        const PIXEL_WIDTH = 50;
-        const TOTAL_PIXELS = GRID_SIZE * GRID_SIZE;
-        const GRID_WIDTH = GRID_SIZE * PIXEL_WIDTH;
+      const GRID_SIZE = 10
+      const PIXEL_WIDTH = 50
+      const TOTAL_PIXELS = GRID_SIZE * GRID_SIZE
+      const GRID_WIDTH = GRID_SIZE * PIXEL_WIDTH
 
+      // Set CSS variables
+      document.documentElement.style.setProperty('--grid-size', GRID_SIZE)
+      document.documentElement.style.setProperty('--pixel-width', PIXEL_WIDTH + 'px')
+      document.documentElement.style.setProperty('--grid-width', GRID_WIDTH + 'px')
 
-        // Set CSS variables
-        document.documentElement.style.setProperty('--grid-size', GRID_SIZE);
-        document.documentElement.style.setProperty('--pixel-width', PIXEL_WIDTH + 'px');
-        document.documentElement.style.setProperty('--grid-width', GRID_WIDTH + 'px');
+      const grid = document.getElementById('grid')
 
-        const grid = document.getElementById('grid');
+      // Create all divs upfront
+      for (let i = 0; i < TOTAL_PIXELS; i++) {
+        const div = document.createElement('div')
+        grid.appendChild(div)
+      }
 
-        // Create all divs upfront
-        for (let i = 0; i < TOTAL_PIXELS; i++) {
-            const div = document.createElement('div');
-            grid.appendChild(div);
+      async function fetchColor(x, y) {
+        try {
+          const response = await fetch(`/${x}/${y}`)
+          const data = await response.json()
+          return data.color
+        } catch (error) {
+          console.error('Error fetching color:', error)
+          return '#000000'
         }
+      }
 
-        async function fetchColor(x, y) {
-            try {
-                const response = await fetch(`/${x}/${y}`);
-                const data = await response.json();
-                return data.color;
-            } catch (error) {
-                console.error('Error fetching color:', error);
-                return '#000000';
-            }
+      async function populateGrid() {
+        const divs = grid.children
+        for (let y = 0; y < GRID_SIZE; y++) {
+          for (let x = 0; x < GRID_SIZE; x++) {
+            const index = y * GRID_SIZE + x
+            const color = await fetchColor(x, y)
+            divs[index].style.backgroundColor = color
+          }
         }
+      }
 
-        async function populateGrid() {
-            const divs = grid.children;
-            for (let y = 0; y < GRID_SIZE; y++) {
-                for (let x = 0; x < GRID_SIZE; x++) {
-                    const index = y * GRID_SIZE + x;
-                    const color = await fetchColor(x, y);
-                    divs[index].style.backgroundColor = color;
-                }
-            }
-        }
-
-        populateGrid();
+      populateGrid()
     </script>
-</body>
+  </body>
 </html>
