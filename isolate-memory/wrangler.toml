@@ -1,12 +1,12 @@
 #:schema node_modules/wrangler/config-schema.json
-name = "isolate-test"
+name = "isolate-memory"
 main = "src/index.js"
 compatibility_date = "2024-10-22"
 compatibility_flags = ["nodejs_compat"]
 assets = { directory = "./public", binding = "ASSETS" }
 
 routes = [
-  { pattern = "isolate-test.hyperknot.com", custom_domain = true }
+  { pattern = "isolate-memory.hyperknot.com", custom_domain = true }
 ]
 
 # Workers Logs
